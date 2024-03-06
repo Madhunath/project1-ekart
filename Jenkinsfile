@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools{
-        jdk  'jdk11'
+        jdk  'jdk17'
         maven  'maven3'
     }
     
@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Git Checkout') {
             steps {
-                git branch: 'main', changelog: false, poll: false, url: 'git@github.com:Madhunath/project1-ekart.git'
+                git branch: 'main', changelog: false, poll: false, url: 'https://github.com/Madhunath/project1-ekart.git'
             }
         }
         
@@ -24,7 +24,7 @@ pipeline {
         
         stage('Sonarqube Analysis') {
             steps {
-                   sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.url=http://54.86.43.112:9000/ Dsonar.login=squ_6de38df3b5813ce3a38ddf8d3990a3ad5dae74f8 -Dsonar.projectName=Shopping-Cart \
+                   sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.url=http://18.235.234.89:9000/ Dsonar.login=squ_24398091355da16cfbc8b36ca37362389d6d8dc7 -Dsonar.projectName=Shopping-Cart \
                    -Dsonar.java.binaries=. \
                    -Dsonar.projectKey=Shopping-Cart '''
             }
@@ -40,7 +40,7 @@ pipeline {
         stage('Docker Build & Push') {
             steps {
                 script{
-                    withDockerRegistry(credentialsId: '2fe19d8a-3d12-4b82-ba20-9d22e6bf1672', toolName: 'docker') {
+                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
                         
                         sh "docker build -t shopping-cart -f docker/Dockerfile ."
                         sh "docker tag  shopping-cart madhunath/shopping-cart:latest"
@@ -50,13 +50,5 @@ pipeline {
             }
         }
     
-        stage('Docker Deploy to Container') {
-            steps {
-                script {
-                withDockerRegistry(credentialsId: 'e8442a03-f89f-46d7-853e-ca9d84d501d0', toolName: 'bigproject') {
-                    sh "docker run -d --name shopping-cart -p 8070:8070 madhunath/shopping-cart:latest" }
-                }                
-            }
-        }
     }
 }
