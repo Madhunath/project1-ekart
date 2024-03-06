@@ -1,5 +1,5 @@
 [CI/CD-server]
-CI/CD-server ansible_host=54.144.143.77 ansible_port=22
+CI/CD-server ansible_host=18.235.234.89 ansible_port=22
 
 [Production-server]
 Production-server ansible_host=54.157.134.251 ansible_port=22
