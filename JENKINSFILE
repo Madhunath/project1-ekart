@@ -1,0 +1,22 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'ansible', url:'https://github.com/Madhunath/project1.git'
+            }
+        }
+        
+        stage('Ansible Playbook') {
+            steps {
+                    withCredentials ([ file(credentialsId: 'awskey.pem', variable: 'PEM_FILE_PATH')]) {
+                    sh """ ansible-playbook -i hosts -e 'ansible_ssh_private_key_file=$PEM_FILE_PATH' config.yml """
+                }
+            }
+        }
+    }
+}    
+    
+
+      
